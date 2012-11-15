@@ -68,8 +68,9 @@
 		<span class="label job-id"></span>
 		<span class="job-data"></span>
 		<div>
+			<input id="kickamount" type="text" name="anount" min="1" max="100" value="1" style="width: 45px;" onChange="setAmount(this);" />
 			<button class="kick-jobs btn btn-mini"
-					data-tube="" onClick="kickJobs(this)">
+					data-tube="" onClick="kickJobs(this);">
 				<i class="icon-circle-arrow-up"></i>
 				Kick one job
 			</button>
@@ -112,6 +113,8 @@
 	function clearTubeList() {
 		$(".tube-list").empty();
 	}
+
+	var amount = 1;
 
 	/**
 	 *
@@ -223,11 +226,12 @@
 	function kickJobs(button) {
 		var server = $("#parameters #server").val();
 		var tube = $(button).data("tube");
+		var count = (amount) ? amount : 1;
 		$.ajax({
 			type: "POST",
 			url: baseUrl + "/job/kick",
 			dataType: "json",
-			data: { server: server, tube: tube },
+			data: { server: server, tube: tube, count: count },
 			success: function(data) {
 				refreshList();
 			},
@@ -235,6 +239,10 @@
 				messageBox(jQuery.parseJSON(xhr.responseText));
 			}
 		});
+	}
+
+	function setAmount(field) {
+		amount = $(field).val();
 	}
 
 	$(function() {
